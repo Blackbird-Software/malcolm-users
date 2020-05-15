@@ -1,0 +1,9 @@
+node_modules
+uploads
+dist
+.idea
+.DS_Store
+.env
+.db
+yarn-error.log
+ormlogs.log

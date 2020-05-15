@@ -1,0 +1,44 @@
+version: '3.5'
+
+networks:
+  malcolm_network:
+    external: true
+
+services:
+  users_web:
+    container_name: users_web
+    build: .
+    restart: always
+    volumes:
+      - .:/opt/app
+      - /opt/app/node_modules
+    ports:
+      - 3007:3000
+    depends_on:
+      - users_db
+    networks:
+      - malcolm_network
+  users_db:
+    container_name: users_db
+    image: postgres:9.4
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_NAME}
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - 5435:5432
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - malcolm_network
+  users_mailhog:
+    container_name: users_mailhog
+    image: mailhog/mailhog:latest
+    ports:
+      - 8025:8025
+    networks:
+      - malcolm_network
+
+volumes:
+  db-data:
