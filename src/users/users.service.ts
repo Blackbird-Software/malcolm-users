@@ -3,14 +3,14 @@ import {InjectRepository} from '@nestjs/typeorm';
 import {UserRepository} from './user.repository';
 import {RegisterUserDto} from './dto/register-user.dto';
 import {UserInterface} from './user.interface';
-import {UpdateUserDto} from "./dto/update-user.dto";
-import {UpdatePasswordDto} from "./dto/update-password.dto";
-import {LogsService} from "../logs/logs.service";
-import {ActionType} from "../logs/enum/action-types";
-import {MailService} from "../mail/mail.service";
-import {plainToClass} from "class-transformer";
-import {User} from "./user.entity";
-import {ResetPasswordDto} from "./dto/reset-password.dto";
+import {UpdateUserDto} from './dto/update-user.dto';
+import {UpdatePasswordDto} from './dto/update-password.dto';
+import {LogsService} from '../logs/logs.service';
+import {ActionType} from '../logs/enum/action-types';
+import {MailService} from '../mail/mail.service';
+import {plainToClass} from 'class-transformer';
+import {User} from './user.entity';
+import {ResetPasswordDto} from './dto/reset-password.dto';
 
 @Injectable()
 export class UsersService {
@@ -20,7 +20,7 @@ export class UsersService {
     constructor(
         @InjectRepository(UserRepository) private readonly userRepository: UserRepository,
         private readonly logsService: LogsService,
-        private readonly mailService: MailService
+        private readonly mailService: MailService,
     ) {
         this.logsService.setClassName(this.CLASSNAME);
     }

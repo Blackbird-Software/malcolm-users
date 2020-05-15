@@ -7,10 +7,10 @@ import {UserInterface} from './user.interface';
 import {PasswordHasher} from './hasher/password-hasher';
 import {PasswordHasherInterface} from './hasher/password-hasher.interface';
 import {NullUser} from './null-user';
-import {UpdateUserDto} from "./dto/update-user.dto";
-import {UpdatePasswordDto} from "./dto/update-password.dto";
+import {UpdateUserDto} from './dto/update-user.dto';
+import {UpdatePasswordDto} from './dto/update-password.dto';
 import * as crypto from 'crypto';
-import {ResetPasswordDto} from "./dto/reset-password.dto";
+import {ResetPasswordDto} from './dto/reset-password.dto';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -34,7 +34,7 @@ export class UserRepository extends Repository<User> {
         user.email = email;
         user.firstName = firstName;
         user.lastName = lastName;
-        user.hash = crypto.createHash('md5').update(Math.random().toString()).digest("hex");
+        user.hash = crypto.createHash('md5').update(Math.random().toString()).digest('hex');
         user.salt = await this.passwordHasher.generateSalt();
         user.password = await this.passwordHasher.hashPassword(password, user.salt);
 
@@ -52,7 +52,7 @@ export class UserRepository extends Repository<User> {
 
     async resetPassword(dto: ResetPasswordDto): Promise<UserInterface> {
         const user = await this.findByEmail(dto.email);
-        user.hash = crypto.createHash('md5').update(Math.random().toString()).digest("hex");
+        user.hash = crypto.createHash('md5').update(Math.random().toString()).digest('hex');
         await user.save();
 
         return user;

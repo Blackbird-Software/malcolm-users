@@ -3,8 +3,8 @@ import {SwaggerModule, DocumentBuilder} from '@nestjs/swagger';
 import {ClassSerializerInterceptor, Logger, ValidationPipe} from '@nestjs/common';
 import {AppModule} from './app.module';
 import config from 'config';
-import {NestExpressApplication} from "@nestjs/platform-express";
-import {join} from "path";
+import {NestExpressApplication} from '@nestjs/platform-express';
+import {join} from 'path';
 
 async function bootstrap() {
     const serverConfig = config.server;

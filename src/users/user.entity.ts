@@ -50,7 +50,7 @@ export class User extends BaseEntity implements UserInterface {
     updatedAt: Date;
 
     @Exclude()
-    fullName = () => `${this.firstName} ${this.lastName}`;
+    fullName = () => `${this.firstName} ${this.lastName}`
 
     async validatePassword(password: string): Promise<boolean> {
         const hash = await bcrypt.hash(password, this.salt);

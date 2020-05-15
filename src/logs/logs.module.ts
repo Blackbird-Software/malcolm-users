@@ -1,7 +1,7 @@
 import {Module} from '@nestjs/common';
 import {ClientsModule} from '@nestjs/microservices';
 import {LogsService} from './logs.service';
-import {rmqClientOptions} from "../config/rmq-client.options";
+import {rmqClientOptions} from '../config/rmq-client.options';
 
 @Module({
     imports: [
@@ -13,7 +13,7 @@ import {rmqClientOptions} from "../config/rmq-client.options";
         ]),
     ],
     providers: [LogsService],
-    exports: [LogsService]
+    exports: [LogsService],
 })
 
 export class LogsModule {

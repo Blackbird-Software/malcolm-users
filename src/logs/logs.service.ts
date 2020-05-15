@@ -1,8 +1,8 @@
 import {Inject, Injectable, OnModuleInit, Scope} from '@nestjs/common';
 import {ClientProxy} from '@nestjs/microservices';
 import config from 'config';
-import {ActionType} from "./enum/action-types";
-import {MessagePatternType} from "./enum/message-pattern-types";
+import {ActionType} from './enum/action-types';
+import {MessagePatternType} from './enum/message-pattern-types';
 const service = config.service;
 
 @Injectable({
@@ -26,16 +26,16 @@ export class LogsService implements OnModuleInit {
         const data = {
             action,
             service: service.id,
-            entity: entity,
+            entity,
             objectId: object.id,
-            object: JSON.stringify(object)
+            object: JSON.stringify(object),
         };
 
         this.clientRmq.send(pattern, data)
             .toPromise()
             .catch((error: any) => {
                     console.error(error);
-                }
+                },
             );
     }
 

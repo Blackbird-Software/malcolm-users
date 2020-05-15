@@ -11,12 +11,12 @@ export const rmqClientOptions: RmqOptions = {
     transport: Transport.RMQ,
     options: {
         urls: [
-            `amqp://${user}:${password}@${hostname}:${port}`
+            `amqp://${user}:${password}@${hostname}:${port}`,
         ],
         queue: 'logs_queue',
         prefetchCount: 1,
         queueOptions: {
-            durable: false
+            durable: false,
         },
     },
-}
+};

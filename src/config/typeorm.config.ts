@@ -5,7 +5,7 @@ const dbConfig = config.db;
 const ormConfig: ConnectionOptions = {
     type: process.env.DATABASE_DRIVER || dbConfig.type,
     host: process.env.DATABASE_HOSTNAME || dbConfig.host,
-    port: parseInt(process.env.DATABASE_PORT) || dbConfig.port,
+    port: parseInt(process.env.DATABASE_PORT, 10) || dbConfig.port,
     username: process.env.DATABASE_USERNAME || dbConfig.username,
     password: process.env.DATABASE_PASSWORD || dbConfig.password,
     database: process.env.DATABASE_NAME || dbConfig.database,

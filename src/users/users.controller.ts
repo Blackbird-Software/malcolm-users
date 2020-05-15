@@ -7,12 +7,12 @@ import {
 import {ApiTags} from '@nestjs/swagger';
 import {UsersService} from './users.service';
 import {RegisterUserDto} from './dto/register-user.dto';
-import {UserInterface} from "./user.interface";
-import {UpdateUserDto} from "./dto/update-user.dto";
-import {HashValidationPipe} from "./pipe/hash-validation.pipe";
+import {UserInterface} from './user.interface';
+import {UpdateUserDto} from './dto/update-user.dto';
+import {HashValidationPipe} from './pipe/hash-validation.pipe';
 import {Response} from 'express';
-import {ResetPasswordDto} from "./dto/reset-password.dto";
-import {UpdatePasswordDto} from "./dto/update-password.dto";
+import {ResetPasswordDto} from './dto/reset-password.dto';
+import {UpdatePasswordDto} from './dto/update-password.dto';
 
 @ApiTags('users')
 @Controller('users')
@@ -50,14 +50,14 @@ export class UsersController {
     @Post(':hash/activate')
     async activate(
         @Param('hash', HashValidationPipe) hash: string,
-        @Res() response: Response
+        @Res() response: Response,
     ): Promise<any> {
         const user = await this.usersService.activate(hash);
 
         return response.render(
             'user/account-activation',
             {
-                fullName: user.fullName()
+                fullName: user.fullName(),
             },
         );
     }
@@ -67,7 +67,7 @@ export class UsersController {
     async resetPassword(
         @Param('hash', HashValidationPipe) hash: string,
         @Body() dto: UpdatePasswordDto,
-        @Res() response: Response
+        @Res() response: Response,
     ): Promise<any> {
         const user = await this.usersService.findByHash(hash);
         await this.usersService.updatePassword(user, dto);

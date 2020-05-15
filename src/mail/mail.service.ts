@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common';
-import {MailerService} from "@nestjs-modules/mailer";
-import {UserInterface} from "../users/user.interface";
+import {MailerService} from '@nestjs-modules/mailer';
+import {UserInterface} from '../users/user.interface';
 import config from 'config';
 
 const server = config.server;
@@ -8,7 +8,7 @@ const server = config.server;
 @Injectable()
 export class MailService {
 
-    private readonly baseUrl: string
+    private readonly baseUrl: string;
 
     constructor(
         private readonly mailerService: MailerService,
@@ -24,7 +24,7 @@ export class MailService {
                 template: 'register',
                 context: {
                     fullName: user.fullName(),
-                    link: `${this.baseUrl}/users/${user.hash}/activate`
+                    link: `${this.baseUrl}/users/${user.hash}/activate`,
                 },
             });
     }
@@ -36,7 +36,7 @@ export class MailService {
                 subject: 'Reset your password',
                 template: 'reset-password',
                 context: {
-                    link: `${this.baseUrl}/users/${user.hash}/reset`
+                    link: `${this.baseUrl}/users/${user.hash}/reset`,
                 },
             });
     }
