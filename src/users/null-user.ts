@@ -6,6 +6,8 @@ export class NullUser implements UserInterface {
     readonly firstName: string;
     readonly id: string;
     readonly lastName: string;
+    readonly active: boolean;
+    readonly hash?: string;
     readonly password: string;
     readonly salt: string;
 
@@ -13,4 +15,10 @@ export class NullUser implements UserInterface {
         return Promise.resolve(false);
     }
 
+    fullName(): string {
+        return '';
+    }
+
+    activate(): void {
+    }
 }

@@ -12,5 +12,6 @@ import {DatabaseOrmModule} from "./database-orm.module";
         HealthModule,
     ],
 })
+
 export class AppModule {
 }

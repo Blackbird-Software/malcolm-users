@@ -10,6 +10,7 @@ import {PasswordHasherInterface} from './hasher/password-hasher.interface';
 import {NullUser} from './null-user';
 import {UpdateUserDto} from "./dto/update-user.dto";
 import {UpdatePasswordDto} from "./dto/update-password.dto";
+import * as crypto from 'crypto';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -33,11 +34,13 @@ export class UserRepository extends Repository<User> {
         user.email = email;
         user.firstName = firstName;
         user.lastName = lastName;
+        user.hash = crypto.createHash('md5').update(Math.random().toString()).digest("hex");
         user.salt = await this.passwordHasher.generateSalt();
         user.password = await this.passwordHasher.hashPassword(password, user.salt);
 
         const saved = await user.save();
-        return plainToClass(User, saved); // because of: https://github.com/nestjs/nest/issues/2237
+
+        return saved;
     }
 
     async updateUser(id: string, dto: UpdateUserDto): Promise<UserInterface> {
@@ -58,9 +61,17 @@ export class UserRepository extends Repository<User> {
         return user;
     }
 
+    async activate(hash: string): Promise<UserInterface> {
+        const user = await this.findByHash(hash);
+        user.activate();
+        await user.save();
+
+        return user;
+    }
+
     async validateUserPassword(dto: LoginDto): Promise<UserInterface> {
         const {email, password} = dto;
-        const user = await this.findOne({email}) || new NullUser();
+        const user = await this.findOne({email, active: true}) || new NullUser();
 
         if (await user.validatePassword(password)) {
             return user;
@@ -69,11 +80,21 @@ export class UserRepository extends Repository<User> {
         throw new UnauthorizedException('Invalid credentials');
     }
 
+    async findByHash(hash: string): Promise<User> {
+        const user = await this.findOne({hash});
+
+        if (!user) {
+            throw new NotFoundException('User does not exist. ');
+        }
+
+        return user;
+    }
+
     private async ensureUserExists(id: string): Promise<User> {
         const user = await this.findOne(id);
 
         if (!user) {
-            throw new NotFoundException('User does not exists. ');
+            throw new NotFoundException('User does not exist. ');
         }
 
         return user;

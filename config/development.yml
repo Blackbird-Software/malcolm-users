@@ -1,3 +1,8 @@
+server:
+  port: 3000
+  baseUrl: 'http://localhost:3007'
+  smtpDsn: 'smtp://users_mailhog:1025'
+
 db:
   type: 'postgres'
   host: 'users_db'

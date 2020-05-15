@@ -32,6 +32,14 @@ export class User extends BaseEntity implements UserInterface {
     password: string;
 
     @Exclude()
+    @Column({nullable: true})
+    hash?: string;
+
+    @Exclude()
+    @Column({default: false})
+    active: boolean = false;
+
+    @Exclude()
     @Column()
     salt: string;
 
@@ -42,10 +50,14 @@ export class User extends BaseEntity implements UserInterface {
     updatedAt: Date;
 
     @Exclude()
-    fullName = () => `${this.firstName} ${this.lastName}`
+    fullName = () => `${this.firstName} ${this.lastName}`;
 
     async validatePassword(password: string): Promise<boolean> {
         const hash = await bcrypt.hash(password, this.salt);
         return hash === this.password;
+    }
+
+    activate(): void {
+        this.active = true;
     }
 }

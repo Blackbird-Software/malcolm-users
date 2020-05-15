@@ -10,6 +10,7 @@ import {RegisterUserDto} from './dto/register-user.dto';
 import {UserInterface} from "./user.interface";
 import {UpdateUserDto} from "./dto/update-user.dto";
 import {UpdatePasswordDto} from "./dto/update-password.dto";
+import {HashValidationPipe} from "./pipe/hash-validation.pipe";
 
 @ApiTags('users')
 @Controller('users')
@@ -44,5 +45,10 @@ export class UsersController {
     @Get(':id')
     async getById(@Param('id', ParseUUIDPipe) id: string): Promise<UserInterface> {
         return await this.usersService.findById(id);
+    }
+
+    @Get(':hash/activate')
+    async activate(@Param('hash', HashValidationPipe) hash: string): Promise<UserInterface> {
+        return await this.usersService.activate(hash);
     }
 }
