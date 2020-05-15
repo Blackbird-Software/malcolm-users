@@ -2,15 +2,15 @@ import {
     Controller,
     Post,
     Body,
-    Get, Param, ParseUUIDPipe, Put, Patch,
+    Get, Param, ParseUUIDPipe, Put, Res,
 } from '@nestjs/common';
 import {ApiTags} from '@nestjs/swagger';
 import {UsersService} from './users.service';
 import {RegisterUserDto} from './dto/register-user.dto';
 import {UserInterface} from "./user.interface";
 import {UpdateUserDto} from "./dto/update-user.dto";
-import {UpdatePasswordDto} from "./dto/update-password.dto";
 import {HashValidationPipe} from "./pipe/hash-validation.pipe";
+import {Response} from 'express';
 
 @ApiTags('users')
 @Controller('users')
@@ -34,21 +34,21 @@ export class UsersController {
         return this.usersService.update(id, dto);
     }
 
-    @Patch('/:id')
-    updatePassword(
-        @Param('id', ParseUUIDPipe) id: string,
-        @Body() dto: UpdatePasswordDto,
-    ): Promise<UserInterface> {
-        return this.usersService.updatePassword(id, dto);
-    }
-
     @Get(':id')
     async getById(@Param('id', ParseUUIDPipe) id: string): Promise<UserInterface> {
         return await this.usersService.findById(id);
     }
 
     @Get(':hash/activate')
-    async activate(@Param('hash', HashValidationPipe) hash: string): Promise<UserInterface> {
-        return await this.usersService.activate(hash);
+    async activate(
+        @Param('hash', HashValidationPipe) hash: string,
+        @Res() res: Response
+    ): Promise<any> {
+        const user = await this.usersService.activate(hash);
+
+        return res.render(
+            'user/account-activated',
+            {fullName: user.fullName()},
+        );
     }
 }

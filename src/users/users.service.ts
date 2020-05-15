@@ -41,12 +41,12 @@ export class UsersService {
         return user;
     }
 
-    async updatePassword(id: string, dto: UpdatePasswordDto): Promise<UserInterface> {
-        const user = await this.userRepository.updatePassword(id, dto);
+    async updatePassword(user: User, dto: UpdatePasswordDto): Promise<UserInterface> {
+        const saved = await this.userRepository.updatePassword(user, dto);
         const clearedUser = this.removeSensitiveData(user);
         await this.logsService.sendMessage(clearedUser, ActionType.UPDATE);
 
-        return user;
+        return saved;
     }
 
     async findById(id: string): Promise<UserInterface> {

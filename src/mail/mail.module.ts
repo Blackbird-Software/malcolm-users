@@ -14,7 +14,7 @@ const server = config.server;
                 from:'"Malcolm support" <support@malcolm.com>',
             },
             template: {
-                dir: __dirname + '/../templates',
+                dir: __dirname + '/templates',
                 adapter: new HandlebarsAdapter(),
                 options: {
                     strict: true,

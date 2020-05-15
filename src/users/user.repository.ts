@@ -52,8 +52,7 @@ export class UserRepository extends Repository<User> {
         return user;
     }
 
-    async updatePassword(id: string, dto: UpdatePasswordDto): Promise<UserInterface> {
-        const user = await this.ensureUserExists(id);
+    async updatePassword(user: User, dto: UpdatePasswordDto): Promise<UserInterface> {
         user.salt = await this.passwordHasher.generateSalt();
         user.password = await this.passwordHasher.hashPassword(dto.password, user.salt);
         await user.save();
