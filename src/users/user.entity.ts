@@ -58,6 +58,7 @@ export class User extends BaseEntity implements UserInterface {
     }
 
     activate(): void {
+        this.hash = null;
         this.active = true;
     }
 }

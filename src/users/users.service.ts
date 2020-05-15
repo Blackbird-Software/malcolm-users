@@ -10,6 +10,7 @@ import {ActionType} from "../logs/enum/action-types";
 import {MailService} from "../mail/mail.service";
 import {plainToClass} from "class-transformer";
 import {User} from "./user.entity";
+import {ResetPasswordDto} from "./dto/reset-password.dto";
 
 @Injectable()
 export class UsersService {
@@ -49,14 +50,17 @@ export class UsersService {
         return saved;
     }
 
+    async resetPassword(dto: ResetPasswordDto): Promise<any> {
+        const user = await this.userRepository.resetPassword(dto);
+        await this.mailService.resetPassword(user);
+    }
+
     async findById(id: string): Promise<UserInterface> {
-        const found = await this.userRepository.findOne(id);
+        return this.userRepository.findById(id);
+    }
 
-        if (!found) {
-            throw new NotFoundException('User not found. ');
-        }
-
-        return found;
+    async findByHash(hash: string): Promise<User> {
+        return this.userRepository.findByHash(hash);
     }
 
     async activate(hash: string): Promise<UserInterface> {

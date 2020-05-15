@@ -1,7 +1,6 @@
 import {EntityRepository, Repository} from 'typeorm';
 import {ConflictException, NotFoundException, UnauthorizedException} from '@nestjs/common';
 import {User} from './user.entity';
-import {plainToClass} from 'class-transformer';
 import {RegisterUserDto} from './dto/register-user.dto';
 import {LoginDto} from '../auth/dto/login.dto';
 import {UserInterface} from './user.interface';
@@ -11,6 +10,7 @@ import {NullUser} from './null-user';
 import {UpdateUserDto} from "./dto/update-user.dto";
 import {UpdatePasswordDto} from "./dto/update-password.dto";
 import * as crypto from 'crypto';
+import {ResetPasswordDto} from "./dto/reset-password.dto";
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -38,15 +38,21 @@ export class UserRepository extends Repository<User> {
         user.salt = await this.passwordHasher.generateSalt();
         user.password = await this.passwordHasher.hashPassword(password, user.salt);
 
-        const saved = await user.save();
-
-        return saved;
+        return user.save();
     }
 
     async updateUser(id: string, dto: UpdateUserDto): Promise<UserInterface> {
         const user = await this.ensureUserExists(id);
         user.firstName = dto.firstName;
         user.lastName = dto.lastName;
+        await user.save();
+
+        return user;
+    }
+
+    async resetPassword(dto: ResetPasswordDto): Promise<UserInterface> {
+        const user = await this.findByEmail(dto.email);
+        user.hash = crypto.createHash('md5').update(Math.random().toString()).digest("hex");
         await user.save();
 
         return user;
@@ -79,8 +85,20 @@ export class UserRepository extends Repository<User> {
         throw new UnauthorizedException('Invalid credentials');
     }
 
+    async findById(id: string): Promise<User> {
+        return this.findByParam({id});
+    }
+
     async findByHash(hash: string): Promise<User> {
-        const user = await this.findOne({hash});
+        return this.findByParam({hash});
+    }
+
+    async findByEmail(email: string): Promise<User> {
+        return this.findByParam({email});
+    }
+
+    private async findByParam(value: any): Promise<User> {
+        const user = await this.findOne(value);
 
         if (!user) {
             throw new NotFoundException('User does not exist. ');
