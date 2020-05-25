@@ -1,3 +1,5 @@
+import {RoleEnum} from "./enum/role.enum";
+
 export interface UserInterface {
     readonly id: string;
     readonly email: string;
@@ -7,8 +9,11 @@ export interface UserInterface {
     readonly hash?: string;
     password: string;
     salt: string;
+    roles: RoleEnum[];
 
     validatePassword(password: string): Promise<boolean>;
     fullName(): string;
     activate(): void;
+    isAdmin(): boolean;
+    hasRoles(roles: string[]): boolean;
 }

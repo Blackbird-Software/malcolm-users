@@ -2,7 +2,7 @@ import {
     Controller,
     Post,
     Body,
-    Get, Param, ParseUUIDPipe, Put, Res, HttpStatus, HttpCode,
+    Get, Param, ParseUUIDPipe, Put, Res, HttpCode, UseGuards,
 } from '@nestjs/common';
 import {ApiTags} from '@nestjs/swagger';
 import {UsersService} from './users.service';
@@ -13,6 +13,9 @@ import {HashValidationPipe} from './pipe/hash-validation.pipe';
 import {Response} from 'express';
 import {ResetPasswordDto} from './dto/reset-password.dto';
 import {UpdatePasswordDto} from './dto/update-password.dto';
+import {HasRoles} from "../auth/decorator/has-roles.decorator";
+import {AuthGuard} from "@nestjs/passport";
+import {RoleAuthGuard} from "../auth/jwt/role.guard";
 
 @ApiTags('users')
 @Controller('users')
@@ -43,6 +46,8 @@ export class UsersController {
     }
 
     @Get(':id')
+    @UseGuards(AuthGuard('jwt'), RoleAuthGuard)
+    @HasRoles('admin')
     async getById(@Param('id', ParseUUIDPipe) id: string): Promise<UserInterface> {
         return await this.usersService.findById(id);
     }

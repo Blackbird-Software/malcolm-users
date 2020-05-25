@@ -25,8 +25,8 @@ export class AuthService {
     const user = await this.userRepository.validateUserPassword(dto);
     const expiresIn = jwtConfig.expiresIn;
 
-    const { email, id } = user;
-    const payload: JwtPayloadInterface = { email, id };
+    const { email, id, roles } = user;
+    const payload: JwtPayloadInterface = { email, id, roles };
     const accessToken = await this.jwtService.sign(payload);
     this.logger.debug(`Generated JWT Token with payload ${JSON.stringify(payload)}`);
 

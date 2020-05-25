@@ -1,4 +1,5 @@
 import {UserInterface} from './user.interface';
+import {RoleEnum} from "./enum/role.enum";
 
 export class NullUser implements UserInterface {
 
@@ -10,6 +11,7 @@ export class NullUser implements UserInterface {
     readonly hash?: string;
     readonly password: string;
     readonly salt: string;
+    readonly roles: RoleEnum[];
 
     validatePassword(password: string): Promise<boolean> {
         return Promise.resolve(false);
@@ -20,5 +22,13 @@ export class NullUser implements UserInterface {
     }
 
     activate(): void {
+    }
+
+    isAdmin(): boolean {
+        return false;
+    }
+
+    hasRoles(roles: string[]): boolean {
+        return false;
     }
 }
