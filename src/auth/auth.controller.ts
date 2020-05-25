@@ -3,7 +3,7 @@ import {
     Post,
     Body,
     ValidationPipe,
-    HttpCode, UseGuards, Get, Patch, Put,
+    HttpCode, UseGuards, Get, Patch, Put, Head,
 } from '@nestjs/common';
 import {LoginDto} from './dto/login.dto';
 import {AuthService} from './auth.service';
@@ -24,7 +24,15 @@ export class AuthController {
     constructor(
         private readonly authService: AuthService,
         private readonly usersService: UsersService,
-    ) {}
+    ) {
+    }
+
+    @ApiBearerAuth()
+    @Head('/check')
+    @UseGuards(AuthGuard())
+    @HttpCode(204)
+    check(): void {
+    }
 
     @Post('/token')
     @HttpCode(200)
