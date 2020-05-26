@@ -38,6 +38,8 @@ export class UsersController {
     }
 
     @Put('/:id')
+    @UseGuards(AuthGuard('jwt'), RoleAuthGuard)
+    @HasRoles('admin')
     update(
         @Param('id', ParseUUIDPipe) id: string,
         @Body() dto: UpdateUserDto,
@@ -45,7 +47,7 @@ export class UsersController {
         return this.usersService.update(id, dto);
     }
 
-    @Get(':id')
+    @Get('/:id')
     @UseGuards(AuthGuard('jwt'), RoleAuthGuard)
     @HasRoles('admin')
     async getById(@Param('id', ParseUUIDPipe) id: string): Promise<UserInterface> {
